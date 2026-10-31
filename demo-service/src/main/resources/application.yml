@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: demo-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+
+config:
+  client:
+    server-url: ${CONFIG_SERVER_URL:http://localhost:8080}
+    service-id: "demo-service-1"
+    tenants: "acme,globex"
+    poll-interval-seconds: 2
+    http-timeout-seconds: 2
+    snapshot-dir: "./snapshots"
+    token: ""
