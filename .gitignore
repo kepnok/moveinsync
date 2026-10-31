@@ -1,0 +1,8 @@
+.tools/
+target/
+.idea/
+*.iml
+*.log
+snapshots/
+/tmp/
+pgdata/
