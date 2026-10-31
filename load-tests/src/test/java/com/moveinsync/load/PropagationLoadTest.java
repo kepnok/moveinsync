@@ -128,3 +128,4 @@ class PropagationLoadTest extends BaseLoadTest {
         }
     }
 }
+

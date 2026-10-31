@@ -32,3 +32,4 @@ public class ConfigMetrics {
         .register(registry);
     }
 }
+

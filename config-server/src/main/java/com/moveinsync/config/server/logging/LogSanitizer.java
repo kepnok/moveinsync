@@ -16,3 +16,4 @@ public final class LogSanitizer {
         return PHONE_PATTERN.matcher(sanitized).replaceAll("***-***-****");
     }
 }
+

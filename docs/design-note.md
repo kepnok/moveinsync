@@ -210,3 +210,4 @@ Staged rollouts do not introduce a second resolution engine. Instead, they lever
 - **Authentication**: Stateless HMAC-SHA256 JWT tokens. Claims carry `sub` (service or admin identity), `roles` (`ROLE_ADMIN`, `ROLE_OPERATOR`, `ROLE_SERVICE`), and `tenants` (e.g. `["acme", "globex"]` or `["*"]`).
 - **404 Over 403 on Cross-Tenant Access**: When a client requests configuration or delta for a tenant not authorized by their token, the server responds with `404 Not Found` (never `403 Forbidden`). This prevents malicious actors from discovering the existence of other tenants.
 - **PII Scrubbing**: All log messages and error bodies pass through `LogSanitizer`, redacting emails, phone numbers, and internal stack traces. Every request is stamped with an `X-Correlation-ID` propagated across MDC logs.
+

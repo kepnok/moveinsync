@@ -86,3 +86,4 @@ public class DeltaApplier {
         return new ApplyResult.Ignored("Unknown sync response mode: " + response.mode());
     }
 }
+

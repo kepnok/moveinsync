@@ -38,3 +38,4 @@ public class RollbackController {
         return ResponseEntity.ok(rollbackService.rollback(request, idempotencyKey, principal));
     }
 }
+

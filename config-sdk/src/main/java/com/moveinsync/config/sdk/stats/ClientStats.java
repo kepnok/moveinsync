@@ -13,3 +13,4 @@ public record ClientStats(
         long diskLoads,
         boolean healthy
 ) {}
+

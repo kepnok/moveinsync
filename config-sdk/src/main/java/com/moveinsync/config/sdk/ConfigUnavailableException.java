@@ -9,3 +9,4 @@ public class ConfigUnavailableException extends RuntimeException {
         super(message, cause);
     }
 }
+

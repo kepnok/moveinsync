@@ -9,3 +9,4 @@ public record CreateRolloutRequest(
         List<String> officeIds,
         String reason
 ) {}
+

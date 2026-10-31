@@ -26,3 +26,4 @@ else
   echo "Failed to mint token. Server response: $RESPONSE" >&2
   exit 1
 fi
+

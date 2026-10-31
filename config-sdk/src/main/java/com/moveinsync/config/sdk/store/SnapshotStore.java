@@ -7,3 +7,4 @@ public interface SnapshotStore {
     void save(String tenantId, ConfigSnapshot snapshot);
     Optional<ConfigSnapshot> loadLatestValid(String tenantId);
 }
+

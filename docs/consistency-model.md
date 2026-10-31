@@ -152,3 +152,4 @@ VALUES (1, 0, gen_random_uuid(), NOW());
 | **Write Atomicity** | Atomic ChangeSets | Single DB transaction + Single `AtomicReference.set()` |
 | **Cross-Field Safety** | Invariant Checked | `ChangeSetValidator` pre-evaluates candidate snapshot |
 | **Disaster Recovery** | Epoch Monotonicity | Server `UUID epoch` resets client watermarks safely |
+

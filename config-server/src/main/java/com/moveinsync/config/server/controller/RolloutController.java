@@ -65,3 +65,4 @@ public class RolloutController {
         return ResponseEntity.ok(rolloutService.listActive(tenantId, principal));
     }
 }
+

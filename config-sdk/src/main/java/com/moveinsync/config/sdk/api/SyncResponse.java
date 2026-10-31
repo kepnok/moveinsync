@@ -14,3 +14,4 @@ public record SyncResponse(
         List<ChangeSet> changeSets,
         ConfigSnapshot snapshot
 ) {}
+

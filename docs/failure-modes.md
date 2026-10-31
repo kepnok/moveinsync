@@ -80,3 +80,4 @@ If an unintended configuration change is published:
      -d '{"targetVersion": 41, "reason": "Revert to v41", "tenantId": "acme"}'
    ```
 3. The server computes the exact inverse change items, advances the monotonic version to $V + 1$, persists to DB, and broadcasts the new version to all connected SDK clients via SSE in $<5$ seconds.
+

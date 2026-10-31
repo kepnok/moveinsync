@@ -115,3 +115,4 @@ class SecurityAndObservabilityTest extends BaseIntegrationTest {
         assertThat(sanitized).contains("***@***.***");
     }
 }
+

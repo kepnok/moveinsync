@@ -12,3 +12,4 @@ public interface ServerApi extends AutoCloseable {
     @Override
     default void close() {}
 }
+

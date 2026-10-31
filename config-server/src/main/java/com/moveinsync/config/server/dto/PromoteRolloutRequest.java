@@ -4,3 +4,4 @@ public record PromoteRolloutRequest(
         String reason,
         ScopeDto targetScope
 ) {}
+

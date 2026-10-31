@@ -6,3 +6,4 @@ import com.moveinsync.config.core.model.ConfigSnapshot;
 public interface ConfigChangeListener {
     void onChange(ConfigSnapshot snapshot);
 }
+

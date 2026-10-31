@@ -60,3 +60,4 @@ class FailureInjectionTest extends BaseLoadTest {
         }
     }
 }
+

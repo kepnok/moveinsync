@@ -17,3 +17,4 @@ public class BadRequestException extends ConfigException {
         return "BAD_REQUEST";
     }
 }
+

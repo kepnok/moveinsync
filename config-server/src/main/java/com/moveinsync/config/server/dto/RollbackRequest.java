@@ -5,3 +5,4 @@ public record RollbackRequest(
         String reason,
         String tenantId
 ) {}
+

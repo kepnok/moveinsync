@@ -47,3 +47,4 @@ STATS_RESP=$(curl -s "$DEMO_SERVICE_URL/demo/stats")
 echo "Client Stats: $STATS_RESP"
 
 echo "=== SUCCESS: Demo service served all requests locally from memory during server outage! ==="
+
