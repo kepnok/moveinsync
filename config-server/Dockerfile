@@ -18,3 +18,4 @@ RUN apk add --no-cache curl
 COPY --from=build /app/config-server/target/config-server-*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
+

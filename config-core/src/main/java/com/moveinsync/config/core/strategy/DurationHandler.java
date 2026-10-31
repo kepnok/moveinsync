@@ -58,3 +58,4 @@ public class DurationHandler implements ValueTypeHandler {
         return new DurationValue(duration);
     }
 }
+

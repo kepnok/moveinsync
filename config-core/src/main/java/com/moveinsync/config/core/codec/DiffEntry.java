@@ -15,3 +15,4 @@ public record DiffEntry(
         Objects.requireNonNull(scope, "scope cannot be null");
     }
 }
+

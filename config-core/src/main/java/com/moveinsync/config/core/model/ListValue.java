@@ -40,3 +40,4 @@ public record ListValue(List<ConfigValue> items) implements ConfigValue {
         return items.stream().map(ConfigValue::rawValue).toList();
     }
 }
+

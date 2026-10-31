@@ -10,3 +10,4 @@ public interface ValueTypeHandler {
     ValueType supports();
     ConfigValue parse(JsonNode json, ValidationRules rules) throws ValidationFailedException;
 }
+

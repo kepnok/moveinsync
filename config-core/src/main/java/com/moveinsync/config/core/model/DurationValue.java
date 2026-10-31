@@ -41,3 +41,4 @@ public record DurationValue(Duration value) implements ConfigValue {
         return value;
     }
 }
+

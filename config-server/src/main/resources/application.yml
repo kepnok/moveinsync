@@ -38,3 +38,4 @@ config:
     outbox-delay-ms: 200
     heartbeat-seconds: 15
     max-connections-per-service: 50
+

@@ -8,3 +8,4 @@ public sealed interface ConfigValue permits NumberValue, DurationValue, TimeWind
     JsonNode toJson();
     Object rawValue();
 }
+

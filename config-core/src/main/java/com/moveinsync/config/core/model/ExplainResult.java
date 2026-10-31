@@ -13,3 +13,4 @@ public record ExplainResult(
         levels = levels != null ? List.copyOf(levels) : Collections.emptyList();
     }
 }
+

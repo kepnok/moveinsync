@@ -17,3 +17,4 @@ public record OverrideChange(
         return newValue == null;
     }
 }
+

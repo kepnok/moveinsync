@@ -170,3 +170,4 @@ class ConfigResolverTest {
                 .isInstanceOf(UnknownSettingException.class);
     }
 }
+

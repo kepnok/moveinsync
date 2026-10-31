@@ -45,3 +45,4 @@ public record NumberValue(BigDecimal value) implements ConfigValue {
         return value;
     }
 }
+

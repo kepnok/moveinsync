@@ -11,3 +11,4 @@ public record LevelEntry(
         Objects.requireNonNull(scope, "scope cannot be null");
     }
 }
+

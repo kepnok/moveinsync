@@ -46,3 +46,4 @@ public record TimeWindowValue(LocalTime start, LocalTime end) implements ConfigV
         return Map.of("start", start.format(FORMATTER), "end", end.format(FORMATTER));
     }
 }
+

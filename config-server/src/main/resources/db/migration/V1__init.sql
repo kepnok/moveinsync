@@ -74,3 +74,4 @@ CREATE TABLE rollout_targets (
   office_scope_id VARCHAR(256),
   PRIMARY KEY (rollout_id, office_scope_id)
 );
+

@@ -20,3 +20,4 @@ public final class ValidationFailedException extends RuntimeException {
         return violations;
     }
 }
+

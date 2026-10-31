@@ -13,3 +13,4 @@ public record Violation(String code, String settingKey, String message) {
         }
     }
 }
+

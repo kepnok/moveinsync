@@ -20,3 +20,4 @@ class ResolverBenchmarkTest {
         assertThat(result.p50Micros()).isLessThan(50.0); // Microseconds!
     }
 }
+

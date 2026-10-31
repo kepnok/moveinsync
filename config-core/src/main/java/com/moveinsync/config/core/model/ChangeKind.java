@@ -8,3 +8,4 @@ public enum ChangeKind {
     ROLLOUT_PROMOTE,
     ROLLOUT_CANCEL
 }
+

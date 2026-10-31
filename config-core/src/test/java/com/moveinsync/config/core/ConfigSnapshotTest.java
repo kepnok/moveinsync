@@ -200,3 +200,4 @@ class ConfigSnapshotTest {
         assertThat(decodedCs.items()).hasSize(2);
     }
 }
+

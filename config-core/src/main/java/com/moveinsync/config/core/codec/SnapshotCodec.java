@@ -228,3 +228,4 @@ public final class SnapshotCodec {
         return new SettingDefinition(key, type, defValue, rules, desc);
     }
 }
+

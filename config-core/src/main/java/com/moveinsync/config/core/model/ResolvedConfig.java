@@ -15,3 +15,4 @@ public record ResolvedConfig(
         Objects.requireNonNull(source, "source cannot be null");
     }
 }
+

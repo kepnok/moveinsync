@@ -9,3 +9,4 @@ import java.util.Set;
 public interface CrossFieldRule {
     List<Violation> check(ConfigSnapshot candidate, ConfigResolver resolver, Set<ScopeRef> affectedScopes);
 }
+

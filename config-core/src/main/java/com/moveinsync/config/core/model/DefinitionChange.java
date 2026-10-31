@@ -12,3 +12,4 @@ public record DefinitionChange(
         Objects.requireNonNull(newDef, "newDef cannot be null");
     }
 }
+

@@ -78,3 +78,4 @@ public final class ConfigContext {
         return "ConfigContext[clientId=" + clientId + ", officeId=" + officeId + ", shiftId=" + shiftId + "]";
     }
 }
+

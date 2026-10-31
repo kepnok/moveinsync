@@ -60,3 +60,4 @@ public record ChangeSet(
         return new ChangeSet(version, id, kind, authorId, reason, createdAt, filtered, rolloutId, rollbackTo);
     }
 }
+

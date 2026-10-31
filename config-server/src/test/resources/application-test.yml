@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/configdb}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgrespassword}
+  flyway:
+    enabled: true
+    clean-disabled: false
+
+config:
+  jwt:
+    secret: "TestMoveInSyncHierarchicalTenantConfigSecretKey2026!#"
+  propagation:
+    outbox-delay-ms: 50
+

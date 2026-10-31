@@ -28,3 +28,4 @@ public record EnumValue(String value) implements ConfigValue {
         return value;
     }
 }
+

@@ -43,3 +43,4 @@ public class MinLessThanMaxRideTimeRule implements CrossFieldRule {
         return violations;
     }
 }
+

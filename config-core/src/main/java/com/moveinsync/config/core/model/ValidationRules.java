@@ -144,3 +144,4 @@ public record ValidationRules(JsonNode raw) {
         }
     }
 }
+

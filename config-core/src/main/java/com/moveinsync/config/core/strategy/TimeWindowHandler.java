@@ -54,3 +54,4 @@ public class TimeWindowHandler implements ValueTypeHandler {
         return new TimeWindowValue(start, end);
     }
 }
+

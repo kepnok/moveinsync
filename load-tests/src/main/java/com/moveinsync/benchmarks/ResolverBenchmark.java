@@ -94,3 +94,4 @@ public class ResolverBenchmark {
         return new BenchmarkResult(threadCount, totalOperations, opsPerSec, p50Micros, p99Micros, maxMicros);
     }
 }
+

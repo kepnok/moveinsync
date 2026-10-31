@@ -34,3 +34,4 @@ public class EnumHandler implements ValueTypeHandler {
         return new EnumValue(str);
     }
 }
+

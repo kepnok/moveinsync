@@ -12,3 +12,4 @@ public final class UnknownSettingException extends RuntimeException {
         return settingKey;
     }
 }
+
