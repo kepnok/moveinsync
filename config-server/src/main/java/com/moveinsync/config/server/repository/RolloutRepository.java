@@ -21,5 +21,6 @@ public interface RolloutRepository {
     Optional<RolloutRecord> findById(UUID id);
     void updateStatus(UUID id, String status, Long finalVersion);
     Set<String> targets(UUID id);
+    java.util.List<RolloutRecord> findByTenantAndStatus(String tenantId, String status);
 }
 

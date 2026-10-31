@@ -72,5 +72,23 @@ public class JdbcRolloutRepository implements RolloutRepository {
         );
         return Collections.unmodifiableSet(new HashSet<>(list));
     }
+
+    @Override
+    public List<RolloutRecord> findByTenantAndStatus(String tenantId, String status) {
+        return jdbcTemplate.query(
+                "SELECT id, status, tenant_id, stage_version, final_version, created_by, created_at FROM rollouts WHERE tenant_id = ? AND status = ? ORDER BY created_at DESC",
+                (rs, rowNum) -> {
+                    UUID id = rs.getObject("id", UUID.class);
+                    long stageVersion = rs.getLong("stage_version");
+                    Long finalVersion = rs.getObject("final_version") != null ? rs.getLong("final_version") : null;
+                    String createdBy = rs.getString("created_by");
+                    Instant createdAt = rs.getTimestamp("created_at").toInstant();
+                    Set<String> targets = targets(id);
+                    return new RolloutRecord(id, status, tenantId, stageVersion, finalVersion, createdBy, createdAt, targets);
+                },
+                tenantId,
+                status
+        );
+    }
 }
 
