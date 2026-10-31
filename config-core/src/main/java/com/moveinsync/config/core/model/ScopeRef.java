@@ -58,6 +58,19 @@ public record ScopeRef(ScopeType type, String id) implements Comparable<ScopeRef
         return new ScopeRef(st, idStr);
     }
 
+    public ConfigContext toContext() {
+        return switch (type) {
+            case GLOBAL -> ConfigContext.of(null, null, null);
+            case CLIENT -> ConfigContext.of(id, null, null);
+            case OFFICE -> ConfigContext.of(tenantId(), id, null);
+            case SHIFT -> {
+                int lastSlash = id.lastIndexOf('/');
+                String officeId = lastSlash > 0 ? id.substring(0, lastSlash) : null;
+                yield ConfigContext.of(tenantId(), officeId, id);
+            }
+        };
+    }
+
     @Override
     public int compareTo(ScopeRef o) {
         int c = Integer.compare(o.type.specificity(), this.type.specificity()); // higher specificity first
