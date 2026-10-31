@@ -33,11 +33,12 @@ class RolloutAndRollbackIntegrationTest extends BaseIntegrationTest {
     @Test
     @DisplayName("Staged rollout: stage across offices, promote to client, verify fallback cleanup")
     void testStagedRolloutLifecycle() {
-        HttpHeaders headers = authHeaders("rollout-admin", Set.of(Role.ADMIN), Set.of("acme"));
+        String tenant = "rollout-" + UUID.randomUUID().toString().substring(0, 8);
+        HttpHeaders headers = authHeaders("rollout-admin", Set.of(Role.ADMIN), Set.of(tenant));
 
-        String office1 = "acme/blr-roll-" + UUID.randomUUID().toString().substring(0, 6);
-        String office2 = "acme/blr-roll-" + UUID.randomUUID().toString().substring(0, 6);
-        String officeOther = "acme/blr-other-" + UUID.randomUUID().toString().substring(0, 6);
+        String office1 = tenant + "/blr-roll-" + UUID.randomUUID().toString().substring(0, 6);
+        String office2 = tenant + "/blr-roll-" + UUID.randomUUID().toString().substring(0, 6);
+        String officeOther = tenant + "/blr-other-" + UUID.randomUUID().toString().substring(0, 6);
 
         // 1. Stage rollout: set booking.cutoff to 25 on office1 and office2
         CreateRolloutRequest createReq = new CreateRolloutRequest(
@@ -60,14 +61,14 @@ class RolloutAndRollbackIntegrationTest extends BaseIntegrationTest {
         assertThat(rollout.targetOffices()).containsExactlyInAnyOrder(office1, office2);
 
         // Verify state after stage: office1 and office2 have 25, officeOther still has default 60
-        assertThat(resolveLong("acme", office1, "booking.cutoff")).isEqualTo(25L);
-        assertThat(resolveLong("acme", office2, "booking.cutoff")).isEqualTo(25L);
-        assertThat(resolveLong("acme", officeOther, "booking.cutoff")).isEqualTo(60L);
+        assertThat(resolveLong(tenant, office1, "booking.cutoff")).isEqualTo(25L);
+        assertThat(resolveLong(tenant, office2, "booking.cutoff")).isEqualTo(25L);
+        assertThat(resolveLong(tenant, officeOther, "booking.cutoff")).isEqualTo(60L);
 
-        // 2. Promote rollout: promote to CLIENT:acme
+        // 2. Promote rollout: promote to CLIENT:tenant
         ResponseEntity<RolloutResponse> promoteResp = restTemplate.postForEntity(
                 baseUrl() + "/api/v1/rollouts/" + rollout.id() + "/promote",
-                new HttpEntity<>(new PromoteRolloutRequest("Promote to client acme", new ScopeDto("CLIENT", "acme")), headers),
+                new HttpEntity<>(new PromoteRolloutRequest("Promote to client " + tenant, new ScopeDto("CLIENT", tenant)), headers),
                 RolloutResponse.class
         );
 
@@ -78,17 +79,18 @@ class RolloutAndRollbackIntegrationTest extends BaseIntegrationTest {
 
         // Verify state after promote: client-level override is 25, office overrides are deleted,
         // so officeOther now also resolves to 25!
-        assertThat(resolveLong("acme", officeOther, "booking.cutoff")).isEqualTo(25L);
-        assertThat(resolveLong("acme", office1, "booking.cutoff")).isEqualTo(25L);
-        assertThat(resolveLong("acme", office2, "booking.cutoff")).isEqualTo(25L);
+        assertThat(resolveLong(tenant, officeOther, "booking.cutoff")).isEqualTo(25L);
+        assertThat(resolveLong(tenant, office1, "booking.cutoff")).isEqualTo(25L);
+        assertThat(resolveLong(tenant, office2, "booking.cutoff")).isEqualTo(25L);
     }
 
     @Test
     @DisplayName("Staged rollout: cancel removes office overrides and reverts to parent scope")
     void testCancelRollout() {
-        HttpHeaders headers = authHeaders("rollout-admin", Set.of(Role.ADMIN), Set.of("acme"));
+        String tenant = "cancel-" + UUID.randomUUID().toString().substring(0, 8);
+        HttpHeaders headers = authHeaders("rollout-admin", Set.of(Role.ADMIN), Set.of(tenant));
 
-        String office1 = "acme/blr-canc-" + UUID.randomUUID().toString().substring(0, 6);
+        String office1 = tenant + "/blr-canc-" + UUID.randomUUID().toString().substring(0, 6);
 
         // 1. Stage rollout
         CreateRolloutRequest createReq = new CreateRolloutRequest(
@@ -104,7 +106,7 @@ class RolloutAndRollbackIntegrationTest extends BaseIntegrationTest {
         );
         RolloutResponse rollout = createResp.getBody();
         assertThat(rollout).isNotNull();
-        assertThat(resolveLong("acme", office1, "booking.cutoff")).isEqualTo(15L);
+        assertThat(resolveLong(tenant, office1, "booking.cutoff")).isEqualTo(15L);
 
         // 2. Cancel rollout
         ResponseEntity<RolloutResponse> cancelResp = restTemplate.postForEntity(
@@ -116,15 +118,16 @@ class RolloutAndRollbackIntegrationTest extends BaseIntegrationTest {
         assertThat(cancelResp.getBody().status()).isEqualTo("CANCELLED");
 
         // Verify office override was removed and falls back to client/global (not 15)
-        assertThat(resolveLong("acme", office1, "booking.cutoff")).isNotEqualTo(15L);
+        assertThat(resolveLong(tenant, office1, "booking.cutoff")).isNotEqualTo(15L);
     }
 
     @Test
     @DisplayName("Rollback: preview diff matches applied changes, rollback increments monotonic version")
     void testRollbackPreviewAndExecution() {
-        HttpHeaders headers = authHeaders("rollback-admin", Set.of(Role.ADMIN), Set.of("acme"));
+        String tenant = "rb-" + UUID.randomUUID().toString().substring(0, 8);
+        HttpHeaders headers = authHeaders("rollback-admin", Set.of(Role.ADMIN), Set.of(tenant));
 
-        String office = "acme/blr-rb-" + UUID.randomUUID().toString().substring(0, 6);
+        String office = tenant + "/blr-rb-" + UUID.randomUUID().toString().substring(0, 6);
 
         // 1. Publish baseline override at 45
         PublishRequest pub1 = new PublishRequest("Set to 45", List.of(
@@ -136,7 +139,7 @@ class RolloutAndRollbackIntegrationTest extends BaseIntegrationTest {
                 PublishResponse.class
         );
         long targetVersion = resp1.getBody().version();
-        assertThat(resolveLong("acme", office, "booking.cutoff")).isEqualTo(45L);
+        assertThat(resolveLong(tenant, office, "booking.cutoff")).isEqualTo(45L);
 
         // 2. Publish second override modifying it to 10
         PublishRequest pub2 = new PublishRequest("Change to 10", List.of(
@@ -147,10 +150,10 @@ class RolloutAndRollbackIntegrationTest extends BaseIntegrationTest {
                 new HttpEntity<>(pub2, headers),
                 PublishResponse.class
         );
-        assertThat(resolveLong("acme", office, "booking.cutoff")).isEqualTo(10L);
+        assertThat(resolveLong(tenant, office, "booking.cutoff")).isEqualTo(10L);
 
         // 3. POST /api/v1/rollback/preview
-        RollbackRequest rbReq = new RollbackRequest(targetVersion, "Preview reverting to 45", "acme");
+        RollbackRequest rbReq = new RollbackRequest(targetVersion, "Preview reverting to 45", tenant);
         ResponseEntity<List<DiffEntryDto>> previewResp = restTemplate.exchange(
                 baseUrl() + "/api/v1/rollback/preview",
                 HttpMethod.POST,
@@ -179,6 +182,6 @@ class RolloutAndRollbackIntegrationTest extends BaseIntegrationTest {
         assertThat(applied.version()).isGreaterThan(resp2.getBody().version());
 
         // Value is restored to 45!
-        assertThat(resolveLong("acme", office, "booking.cutoff")).isEqualTo(45L);
+        assertThat(resolveLong(tenant, office, "booking.cutoff")).isEqualTo(45L);
     }
 }
