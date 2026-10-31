@@ -47,7 +47,7 @@ public class SdkSyncController {
         return ResponseEntity.ok(snapshotService.fullSnapshot(tenantId));
     }
 
-    @GetMapping("/changes")
+    @GetMapping(value = {"/changes", "/delta"})
     public ResponseEntity<SyncResponseDto> getChanges(
             @RequestParam("tenantId") String tenantId,
             @RequestParam(name = "since", defaultValue = "0") long sinceVersion,
