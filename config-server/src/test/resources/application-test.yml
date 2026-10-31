@@ -7,9 +7,23 @@ spring:
     enabled: true
     clean-disabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
 config:
   jwt:
     secret: "TestMoveInSyncHierarchicalTenantConfigSecretKey2026!#"
   propagation:
     outbox-delay-ms: 50
-
