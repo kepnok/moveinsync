@@ -35,6 +35,8 @@ public abstract class BaseIntegrationTest {
                 pgDir.mkdirs();
                 new ProcessBuilder("/usr/lib/postgresql/15/bin/initdb", "-D", "/tmp/pgdata", "-U", "postgres", "-A", "trust")
                         .inheritIO().start().waitFor();
+            } else {
+                new File(pgDir, "postmaster.pid").delete();
             }
 
             new ProcessBuilder("/usr/lib/postgresql/15/bin/pg_ctl", "-D", "/tmp/pgdata", "-l", "/tmp/pgdata/logfile",

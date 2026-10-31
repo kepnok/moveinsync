@@ -161,6 +161,11 @@ public final class SnapshotCodec {
                 itemNode.put("itemType", "OVERRIDE");
                 itemNode.put("settingKey", oc.settingKey());
                 itemNode.put("scope", oc.scope().key());
+                if (oc.newValue() != null) {
+                    itemNode.put("valueType", oc.newValue().type().name());
+                } else if (oc.oldValue() != null) {
+                    itemNode.put("valueType", oc.oldValue().type().name());
+                }
                 itemNode.set("oldValue", oc.oldValue() != null ? oc.oldValue().toJson() : NullNode.getInstance());
                 itemNode.set("newValue", oc.newValue() != null ? oc.newValue().toJson() : NullNode.getInstance());
             }
@@ -184,24 +189,37 @@ public final class SnapshotCodec {
         JsonNode itemsArr = n.get("items");
         if (itemsArr != null && itemsArr.isArray()) {
             for (JsonNode itemNode : itemsArr) {
-                String itemType = itemNode.get("itemType").asText();
-                String settingKey = itemNode.get("settingKey").asText();
-                if ("DEFINITION".equalsIgnoreCase(itemType)) {
+                String itemType = itemNode.hasNonNull("itemType") ? itemNode.get("itemType").asText() : "";
+                String settingKey = itemNode.hasNonNull("settingKey") ? itemNode.get("settingKey").asText() : "";
+                if ("DEFINITION".equalsIgnoreCase(itemType) || itemNode.has("newDef")) {
                     SettingDefinition oldDef = decodeDefNode(itemNode.get("oldDef"));
                     SettingDefinition newDef = decodeDefNode(itemNode.get("newDef"));
                     defsMap.put(settingKey, newDef);
                     items.add(new DefinitionChange(settingKey, oldDef, newDef));
-                } else if ("OVERRIDE".equalsIgnoreCase(itemType)) {
-                    ScopeRef scope = ScopeRef.parse(itemNode.get("scope").asText());
+                } else if ("OVERRIDE".equalsIgnoreCase(itemType) || itemNode.has("scope")) {
+                    ScopeRef scope;
+                    JsonNode scopeNode = itemNode.get("scope");
+                    if (scopeNode.isTextual()) {
+                        scope = ScopeRef.parse(scopeNode.asText());
+                    } else {
+                        ScopeType st = ScopeType.valueOf(scopeNode.get("type").asText().toUpperCase());
+                        String sid = scopeNode.hasNonNull("id") ? scopeNode.get("id").asText() : null;
+                        scope = new ScopeRef(st, sid);
+                    }
+
                     SettingDefinition def = defsMap.get(settingKey);
+                    ValueType vt = def != null ? def.type() :
+                            (itemNode.hasNonNull("valueType") ? ValueType.valueOf(itemNode.get("valueType").asText()) : null);
+                    ValidationRules rules = def != null ? def.rules() : new ValidationRules(mapper.createObjectNode());
+
                     ConfigValue oldVal = null;
                     ConfigValue newVal = null;
-                    if (def != null) {
+                    if (vt != null) {
                         if (itemNode.hasNonNull("oldValue") && !itemNode.get("oldValue").isNull()) {
-                            oldVal = typeRegistry.parse(def.type(), itemNode.get("oldValue"), def.rules(), settingKey);
+                            oldVal = typeRegistry.parse(vt, itemNode.get("oldValue"), rules, settingKey);
                         }
                         if (itemNode.hasNonNull("newValue") && !itemNode.get("newValue").isNull()) {
-                            newVal = typeRegistry.parse(def.type(), itemNode.get("newValue"), def.rules(), settingKey);
+                            newVal = typeRegistry.parse(vt, itemNode.get("newValue"), rules, settingKey);
                         }
                     }
                     items.add(new OverrideChange(settingKey, scope, oldVal, newVal));
